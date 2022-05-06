@@ -1,0 +1,13 @@
+/TwitterTrackerApp/obj
+/TwitterTrackerApp/obj/*
+/TwitterTrackerApp/bin/
+
+.vs
+/UnitTest/bin
+/UnitTest/obj
+
+.history
+.vscode
+
+.fake
+.ionide
