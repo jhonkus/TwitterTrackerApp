@@ -5,6 +5,9 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+DotNetEnv.Env.Load();
+DotNetEnv.Env.TraversePath().Load();
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
