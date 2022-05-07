@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="TweetSharp-Unofficial-DotNetStandard" Version="2.3.1.10" />
-    <PackageReference Include="DotNetEnv" Version="2.3.0" />
+    <PackageReference Include="TweetSharp-Unofficial-DotNetStandard" Version="2.3.1.10"/>
+    <PackageReference Include="DotNetEnv" Version="2.3.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
   </ItemGroup>
 </Project>
