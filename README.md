@@ -12,3 +12,5 @@ Objective of this project
 - unit tests for the API methods
 
 Lib used: TweetSharp-Unofficial-DotNetStandard
+
+Note: your Twitter Dev Account should be Elevated?
