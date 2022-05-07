@@ -5,3 +5,12 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
 </div>
+
+
+<div style="text-align: center;">
+@using (Html.BeginForm("TwitterAuth", "Home", FormMethod.Get))
+{
+    <br />
+    <button type="submit" id="twitter">Login with Twitter</button>
+}
+</div>
