@@ -26,6 +26,21 @@
                 <img src="@TempData["Userpic"]" style="width:100px;height:100px;" />
                 <br />
                 <p>you've successfully been authenticated via Twitter.</p>
+
+                if (@TempData["isFollower"] == "yes"){
+                    <p>Good You follwer of specific USER ID</p>
+                } else {
+                    <p>You not follwer of specific USER ID</p>
+                }
+
+
+                if (@TempData["isRetweet"] == "yes"){
+                    <p>Good, You retweet specific TWEET ID</p>
+                } else {
+                    <p>You not retweet of specific TWEET ID</p>
+                }
+
+
             }
             else
             {
