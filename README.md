@@ -11,10 +11,24 @@ Objective of this project
 - Display if the user has followed and retweeted
 - unit tests for the API methods
 
-This project use dotnet Core 6.0 SDK
+
 Package used: TweetSharp-Unofficial-DotNetStandard, newtonseof, DotNetEnv
 
 
 Please change value in .env file with yours.
 
 Note: your Twitter Dev Account should be Elevated?
+
+How to install:
+
+This project use dotnet Core 6.0 SDK, please install it first to your computer.
+
+```
+git pull git@github.com:jhonkus/TwitterTrackerApp.git
+cd TwitterTrackerApp
+cd TwitterTrackerApp
+dotnet restore
+dotnet build
+dotnet run
+
+```
