@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace UnitTesting;
+namespace UnitTest;
 
 public class UnitTest1
 {
