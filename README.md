@@ -20,6 +20,8 @@ Package used: TweetSharp-Unofficial-DotNetStandard, newtonseof, DotNetEnv
 Please change value in .env file with yours.
 
 Note: your Twitter Dev Account should be Elevated?
+Please get API_KEY and SCREET_KEY at https://developer.twitter.com
+
 
 How to install:
 
