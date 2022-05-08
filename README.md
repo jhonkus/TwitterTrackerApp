@@ -34,3 +34,5 @@ dotnet build
 dotnet run
 
 ```
+
+Video demo : https://youtu.be/4Xlb6T3KlDE
