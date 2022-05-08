@@ -35,4 +35,12 @@ dotnet run
 
 ```
 
+To Run Unit test
+
+```
+cd UnitTest
+dotnet test
+```
+
+
 Video demo : https://youtu.be/4Xlb6T3KlDE
