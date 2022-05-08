@@ -4,6 +4,7 @@ using TwitterTrackerApp.Models;
 using TweetSharp;
 using Newtonsoft.Json.Linq;
 using DotNetEnv;
+using System.Net;
 
 namespace TwitterTrackerApp.Controllers;
 
@@ -61,34 +62,51 @@ public class HomeController : Controller
             };
 
 
+            // access twitter API V2
             var twitterApi = new TwitterAPI();
 
-            // access twitter API V2
             //get bearer token using OAuth2   
-            var bearerToken = await twitterApi.GetAccessToken();
+            var response = await twitterApi.GetAccessToken();
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
 
-            
-            //check if user has retweet specific TWEET_ID
-            var specificTweetId = Env.GetString("TWEETID");
-            var retweeters = await twitterApi.GetRetweetedOfTweetId(specificTweetId, bearerToken);
-            var findUserInRetweeters = retweeters.FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
+                var item = JObject.Parse(await response.Content.ReadAsStringAsync());
+                string bearerToken = item["access_token"]!.ToString();
 
-            //set user info for isReteet
-            userInfo.isRetweet = findUserInRetweeters != null ? true : false;
-            Console.WriteLine("==userRetweet:{0}", findUserInRetweeters);
+                //check if user has retweet specific TWEET_ID
+                var specificTweetId = Env.GetString("TWEETID");
+                response = await twitterApi.GetRetweetedOfTweetId(specificTweetId, bearerToken);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var responseObj = JObject.Parse(await response.Content.ReadAsStringAsync());
+                    var retweeters = responseObj!["data"]!.Children<JObject>();
+                    var findUserInRetweeters = retweeters.FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
 
-            //check if user login is follower of specific TWEETER ID
-            var specificTwitterAccountId = Env.GetString("TWITTERID");
-            var followers = await twitterApi.GetFollowerOfUserId(specificTwitterAccountId, bearerToken);
-            var findUserInFollowers = followers.FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
+                    //set user info for isReteet
+                    userInfo.isRetweet = findUserInRetweeters != null ? true : false;
+                    Console.WriteLine("==userRetweet:{0}", findUserInRetweeters);
+                }
 
-            //set user info for isFollower
-            userInfo.isFollower = findUserInFollowers != null ? true : false;
-            Console.WriteLine("==userFollower:{0}", findUserInFollowers);
+                //check if user login is follower of specific TWEETER ID
+                var specificTwitterAccountId = Env.GetString("TWITTERID");
+                response = await twitterApi.GetFollowerOfUserId(specificTwitterAccountId, bearerToken);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    var responseObj = JObject.Parse(await response.Content.ReadAsStringAsync());
+                    var followers = responseObj!["data"]!.Children<JObject>();
+                    var findUserInFollowers = followers.FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
+
+                    //set user info for isFollower
+                    userInfo.isFollower = findUserInFollowers != null ? true : false;
+                    Console.WriteLine("==userFollower:{0}", findUserInFollowers);
+                }
+                
+                ViewBag.SpecificTweetId = specificTweetId;
+                ViewBag.SpecificTwitterAccountId = specificTwitterAccountId;
+            }
 
             ViewBag.UserInfo = userInfo;
-            ViewBag.SpecificTweetId = specificTweetId;
-            ViewBag.SpecificTwitterAccountId = specificTwitterAccountId;
+
 
             return View();
         }
