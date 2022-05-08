@@ -3,18 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using TwitterTrackerApp.Models;
 using TweetSharp;
 using Newtonsoft.Json.Linq;
+using DotNetEnv;
 
 namespace TwitterTrackerApp.Controllers;
 
 public class HomeController : Controller
 {
 
-    //Read consumer key from .env
-    private string TWITTER_API_KEY = DotNetEnv.Env.GetString("TWITTER_API_KEY");
-    private string TWITTER_SECREET_KEY = DotNetEnv.Env.GetString("TWITTER_SCREET_KEY");
-    private string SPECIFIC_TWEETID = DotNetEnv.Env.GetString("TWEETID");
-    private string SPECIFICT_TWEETERID = DotNetEnv.Env.GetString("TWEETERID");
 
+    private TwitterService service = new TwitterService(DotNetEnv.Env.GetString("TWITTER_API_KEY"), DotNetEnv.Env.GetString("TWITTER_SCREET_KEY"));
     private readonly ILogger<HomeController> _logger;
 
     public HomeController(ILogger<HomeController> logger)
@@ -32,14 +29,11 @@ public class HomeController : Controller
     public ActionResult TwitterAuth()
     {
 
-        TwitterService service = new TwitterService(TWITTER_API_KEY, TWITTER_SECREET_KEY);
-
         //Register this path to your Twitter App
         var redirectPath = $"{Request.Scheme}://{Request.Host.Value}/Home/ValidateTwitterAuth";
 
         // Get token
         OAuthRequestToken requestToken = service.GetRequestToken(redirectPath);
-
         Uri uri = service.GetAuthenticationUrl(requestToken);
 
         return Redirect(uri.ToString());
@@ -50,42 +44,51 @@ public class HomeController : Controller
         var requestToken = new OAuthRequestToken(oauth_token);
         try
         {
-            TwitterService service = new TwitterService(TWITTER_API_KEY, TWITTER_SECREET_KEY);
             OAuthAccessToken accessToken = service.GetAccessToken(requestToken, oauth_verifier);
             service.AuthenticateWith(accessToken.Token, accessToken.TokenSecret);
 
             VerifyCredentialsOptions option = new VerifyCredentialsOptions();
 
             //Get user profile
-            TwitterUser? user = service.VerifyCredentials(option);
+            var user = service.VerifyCredentials(option);
             Console.WriteLine(" User: {0}", user?.Id);
-            TempData["Id"] = user?.Id;
-            TempData["Name"] = user?.Name;
-            TempData["ScreenName"] = user?.ScreenName;
-            TempData["Userpic"] = user?.ProfileImageUrl;
+
+            var userInfo = new UserInfoModel
+            {
+                Id = user?.IdStr,
+                Name = user?.Name,
+                Userpic = user?.ProfileImageUrl
+            };
 
 
             var twitterApi = new TwitterAPI();
 
             // access twitter API V2
-
-            //get bearer token    
+            //get bearer token using OAuth2   
             var bearerToken = await twitterApi.GetAccessToken();
 
+            
             //check if user has retweet specific TWEET_ID
-            var responseObj = await twitterApi.GetRetweetedOfTweetId(SPECIFIC_TWEETID, bearerToken);
-            var retweeters = (JArray)responseObj["data"];
-            JObject userRetweet = retweeters.Children<JObject>().FirstOrDefault(o => o["id"] != null && o["id"].ToString() == user.Id.ToString());
-            TempData["isRetweet"] = userRetweet != null ? "yes" : "no";
+            var specificTweetId = Env.GetString("TWEETID");
+            JObject responseObj = await twitterApi.GetRetweetedOfTweetId(specificTweetId, bearerToken);
+            var userRetweet = responseObj!["data"]!.Children<JObject>().FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
+
+            //set user info for isReteet
+            userInfo.isRetweet = userRetweet != null ? true : false;
             Console.WriteLine("==userRetweet:{0}", userRetweet);
 
             //check if user login is follower of specific TWEETER ID
-            var respObj2 = await twitterApi.GetFollowerOfUserId(SPECIFICT_TWEETERID, bearerToken);
-            var followers = (JArray)respObj2["data"];
-            JObject userFollower = followers.Children<JObject>().FirstOrDefault(o => o["id"] != null && o["id"].ToString() == user.Id.ToString());
-            TempData["isFollower"] = userFollower != null ? "yes" : "no";
+            var specificTwitterAccountId = Env.GetString("TWITTERID");
+            responseObj = await twitterApi.GetFollowerOfUserId(specificTwitterAccountId, bearerToken);
+            var userFollower = responseObj!["data"]!.Children<JObject>().FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
 
+            //set user info for isFollower
+            userInfo.isFollower = userFollower != null ? true : false;
             Console.WriteLine("==userFollower:{0}", userFollower);
+
+            ViewBag.UserInfo = userInfo;
+            ViewBag.SpecificTweetId = specificTweetId;
+            ViewBag.SpecificTwitterAccountId = specificTwitterAccountId;
 
             return View();
         }

@@ -11,6 +11,10 @@ Objective of this project
 - Display if the user has followed and retweeted
 - unit tests for the API methods
 
-Lib used: TweetSharp-Unofficial-DotNetStandard
+This project use dotnet Core 6.0 SDK
+Package used: TweetSharp-Unofficial-DotNetStandard, newtonseof, DotNetEnv
+
+
+Please change value in .env file with yours.
 
 Note: your Twitter Dev Account should be Elevated?

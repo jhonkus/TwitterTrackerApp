@@ -1,56 +1,63 @@
+@using  TwitterTrackerApp.Models;
+
 @{
     Layout = null;
-}
+} 
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Twitter Tracker App</title>
 </head>
-
 <body>
     
+@{   
+    var userInfo = (UserInfoModel)ViewBag.UserInfo;
+    var specificTweetId = ViewBag.SpecificTweetId;
+    var specificTwitterAccountId = ViewBag.SpecificTwitterAccountId;  
+}  
+<div style="text-align: center;">
+
+    @if (@userInfo.Id != null)
+    {
+        <h3>Twitter Authentication Complete!</h3>
+        <p>you've successfully been authenticated.</p>
+
+        <h2>Welcome @userInfo.Name</h2>
+        <p>Your Twitter ID @userInfo.Id</p>
+        <br />
+        if (@userInfo.Userpic != null){
+            <img src="@userInfo.Userpic" style="width:150px;height:150px;" />
+            <br />
+        }
+        
+
+        if (@userInfo!.isFollower == true){
+            <p>Good You are follower of Twitter Account ID: <b>@specificTwitterAccountId</b></p>
+        } else {
+            <p>You are not follwer of Twitter Account ID <b>@specificTwitterAccountId</b></p>
+        }
+
+        if (@userInfo!.isRetweet == true){
+            <p>Good, You have retweet this tweet ID:  <b>@specificTweetId</b></p>
+        } else {
+            <p>You have not retweet this tweet ID:  <b>@specificTweetId</b></p>
+        }
 
 
-        <div style="text-align: center;">
-            @if (@TempData["Id"] != null)
-            {
-                <h2>Twitter Authentication Complete!</h2>
-    
-    
-                <h1>Welcome @TempData["Name"]</h1>
-                <p>Your ID @TempData["Id"]</p>
-                <br />
-                <img src="@TempData["Userpic"]" style="width:100px;height:100px;" />
-                <br />
-                <p>you've successfully been authenticated via Twitter.</p>
-
-                if (@TempData["isFollower"] == "yes"){
-                    <p>Good You follwer of specific USER ID</p>
-                } else {
-                    <p>You not follwer of specific USER ID</p>
-                }
-
-
-                if (@TempData["isRetweet"] == "yes"){
-                    <p>Good, You retweet specific TWEET ID</p>
-                } else {
-                    <p>You not retweet of specific TWEET ID</p>
-                }
-
-
-            }
-            else
-            {
-                <h2>Authentication failed!</h2>
-                <p>Something went wrong during the authentication, please <a href="/Home/TwitterAuth">try again</a>!</p>
-            }
-        </div>
-
-
-    
+        if (@userInfo!.isFollower == true && @userInfo!.isRetweet == true){
+            <p>Congrat! Now you are <span style="color:blue">eligible</span> to downloads our free products.</p>
+        }else{
+            <p>You are <span style="color:red">not eligible</span> to downloads our free products.</p>
+            <p>Please follow our account and retweet our tweet above.</p>
+        }
+    }
+    else
+    {
+        <h2>Authentication failed!</h2>
+        <p>Something went wrong during the authentication, please <a href="/Home/TwitterAuth">try again</a>!</p>
+    }
+</div> 
 </body>
-
 </html>
