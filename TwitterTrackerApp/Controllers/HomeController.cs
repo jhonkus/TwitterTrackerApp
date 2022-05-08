@@ -70,21 +70,21 @@ public class HomeController : Controller
             
             //check if user has retweet specific TWEET_ID
             var specificTweetId = Env.GetString("TWEETID");
-            JObject responseObj = await twitterApi.GetRetweetedOfTweetId(specificTweetId, bearerToken);
-            var userRetweet = responseObj!["data"]!.Children<JObject>().FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
+            var retweeters = await twitterApi.GetRetweetedOfTweetId(specificTweetId, bearerToken);
+            var findUserInRetweeters = retweeters.FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
 
             //set user info for isReteet
-            userInfo.isRetweet = userRetweet != null ? true : false;
-            Console.WriteLine("==userRetweet:{0}", userRetweet);
+            userInfo.isRetweet = findUserInRetweeters != null ? true : false;
+            Console.WriteLine("==userRetweet:{0}", findUserInRetweeters);
 
             //check if user login is follower of specific TWEETER ID
             var specificTwitterAccountId = Env.GetString("TWITTERID");
-            responseObj = await twitterApi.GetFollowerOfUserId(specificTwitterAccountId, bearerToken);
-            var userFollower = responseObj!["data"]!.Children<JObject>().FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
+            var followers = await twitterApi.GetFollowerOfUserId(specificTwitterAccountId, bearerToken);
+            var findUserInFollowers = followers.FirstOrDefault(o => o["id"] != null && o["id"]!.ToString() == user?.IdStr);
 
             //set user info for isFollower
-            userInfo.isFollower = userFollower != null ? true : false;
-            Console.WriteLine("==userFollower:{0}", userFollower);
+            userInfo.isFollower = findUserInFollowers != null ? true : false;
+            Console.WriteLine("==userFollower:{0}", findUserInFollowers);
 
             ViewBag.UserInfo = userInfo;
             ViewBag.SpecificTweetId = specificTweetId;
