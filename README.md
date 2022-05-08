@@ -34,6 +34,8 @@ dotnet build
 dotnet run
 
 ```
+Open browser: https://localhost:7271
+
 
 To Run Unit test
 
