@@ -1,5 +1,7 @@
 # TwitterTrackerApp
-Using Twitter API to show user activity 
+Using Twitter API to show if user login follow specific twitter account and retweet specifict tweet id
+
+this project use .NET core MVC.
 
 
 Objective of this project
@@ -24,7 +26,7 @@ How to install:
 This project use dotnet Core 6.0 SDK, please install it first to your computer.
 
 ```
-git pull https://github.com/jhonkus/TwitterTrackerApp.git
+git clone https://github.com/jhonkus/TwitterTrackerApp.git
 cd TwitterTrackerApp
 cd TwitterTrackerApp
 dotnet restore
