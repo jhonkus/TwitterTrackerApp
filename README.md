@@ -24,7 +24,7 @@ How to install:
 This project use dotnet Core 6.0 SDK, please install it first to your computer.
 
 ```
-git pull git@github.com:jhonkus/TwitterTrackerApp.git
+git pull https://github.com/jhonkus/TwitterTrackerApp.git
 cd TwitterTrackerApp
 cd TwitterTrackerApp
 dotnet restore
