@@ -1,5 +1,5 @@
 # TwitterTrackerApp
-Using Twitter API to show if user login follow specific twitter account and retweet specifict tweet id
+Using the Twitter API to indicate if a logged in user has followed a specific twitter account and retweeted a specific tweet id
 
 this project use .NET core MVC.
 
