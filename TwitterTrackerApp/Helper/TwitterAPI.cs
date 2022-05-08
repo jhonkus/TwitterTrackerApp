@@ -19,10 +19,10 @@ public class TwitterAPI
         return response;
     }
 
-    public async Task<HttpResponseMessage> GetAccessToken()
+    public async Task<HttpResponseMessage> GetAccessToken(string apiKey, string secreetKey)
     {
         var url = "https://api.twitter.com/oauth2/token";
-        var customerInfo = Convert.ToBase64String(new UTF8Encoding().GetBytes(Env.GetString("TWITTER_API_KEY") + ":" + Env.GetString("TWITTER_SCREET_KEY")));
+        var customerInfo = Convert.ToBase64String(new UTF8Encoding().GetBytes(apiKey + ":" + secreetKey));
         var content = new StringContent("grant_type=client_credentials", Encoding.UTF8, "application/x-www-form-urlencoded");
 
         var response = await RequestAPI(HttpMethod.Post, url, "Basic " + customerInfo, content);

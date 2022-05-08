@@ -65,8 +65,10 @@ public class HomeController : Controller
             // access twitter API V2
             var twitterApi = new TwitterAPI();
 
-            //get bearer token using OAuth2   
-            var response = await twitterApi.GetAccessToken();
+            //get bearer token using OAuth2  
+            var apiKey = Env.GetString("TWITTER_API_KEY");
+            var screetKey = Env.GetString("TWITTER_SCREET_KEY");  
+            var response = await twitterApi.GetAccessToken(apiKey, screetKey);
             if (response.StatusCode == HttpStatusCode.OK)
             {
 
